@@ -1,8 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Headers } from '@nestjs/common';
 import { PostsService } from './posts.service';
 // import { PostEntity } from './entities/post.entity';
 // import { InjectRepository } from '@nestjs/typeorm';
 import { AddPostDto } from './dto/create-post.dto';
+import { verify } from 'jsonwebtoken';
 
 @Controller('posts')
 export class PostsController {
@@ -16,8 +17,12 @@ export class PostsController {
   }
 
   @Post('/add')
-  add(@Body() post: AddPostDto) {
-    console.log(post);
-    // return this.postsService.create(post);
+  add(@Body() post: AddPostDto, @Headers('authorization') token: string) {
+    const tokenValue = token.split(' ')[1];
+    const decoded = verify(tokenValue, process.env.JWT_SECRET!) as {
+      id: number;
+    };
+
+    return this.postsService.add(post, decoded.id);
   }
 }

@@ -1,10 +1,9 @@
-import { HttpException, Injectable } from '@nestjs/common';
-// import { CreatePostDto } from './dto/create-post.dto';
-// import { UpdatePostDto } from './dto/update-post.dto';
 import { Repository } from 'typeorm';
-import { PostEntity } from './entities/post.entity';
-import { AuthEntity } from '../auth/entities/auth.entities';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AddPostDto } from './dto/create-post.dto';
+import { PostEntity } from './entities/post.entity';
+import { HttpException, Injectable } from '@nestjs/common';
+import { AuthEntity } from '../auth/entities/auth.entities';
 
 @Injectable()
 export class PostsService {
@@ -16,7 +15,15 @@ export class PostsService {
   ) {}
 
   // 修改创建文章方法
-  async create(createPostDto, userId: number) {
+  async add(data: AddPostDto, userId: number) {
+    if (!data.title || !data.content) {
+      throw new HttpException('缺少参数', 400);
+    }
+
+    if (!userId) {
+      throw new HttpException('缺少参数', 400);
+    }
+
     // 查找用户
     const user = await this.authRepository.findOne({ where: { id: userId } });
     if (!user) {
@@ -24,12 +31,13 @@ export class PostsService {
     }
 
     // 创建文章并关联用户
-    // const newPost = this.postsRepository.create({
-    //   ...createPostDto,
-    //   user_id: userId,
-    //   user: user,
-    // });
+    const newPost = this.postsRepository.create({
+      user_id: userId,
+      user: user,
+      author: user.username, // 使用用户名作为作者
+      ...data,
+    });
 
-    // return this.postsRepository.save(newPost);
+    return this.postsRepository.save(newPost);
   }
 }

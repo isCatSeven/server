@@ -15,7 +15,7 @@ export class PostEntity {
   @Column({ length: 50 })
   title: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 20, default: '' })
   author: string;
 
   @Column('text')
