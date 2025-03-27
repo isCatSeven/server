@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { AuthEntity } from '../../auth/entities/auth.entities';
 
 @Entity('posts')
 export class PostEntity {
@@ -22,4 +29,11 @@ export class PostEntity {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   update_time: Date;
+
+  @ManyToOne(() => AuthEntity, (user) => user.posts)
+  @JoinColumn({ name: 'user_id' })
+  user: AuthEntity;
+
+  @Column()
+  user_id: number;
 }
