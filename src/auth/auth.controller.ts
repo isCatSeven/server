@@ -1,3 +1,4 @@
+import { Public } from 'src/common/public.decorator';
 import { AuthService } from './auth.service';
 import { ChangeAuthDto } from './dto/change-auth.dto';
 import { Body, Controller, Post } from '@nestjs/common';
@@ -13,8 +14,15 @@ export class AuthController {
    * @param username 用户名
    * @param password 密码
    */
+  @Public()
   @Post('/register')
   register(@Body() data: ChangeAuthDto) {
     return this.authService.register(data);
+  }
+
+  @Public()
+  @Post('/login')
+  login(@Body() data: ChangeAuthDto) {
+    return this.authService.login(data);
   }
 }

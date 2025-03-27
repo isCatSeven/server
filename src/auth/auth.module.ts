@@ -1,19 +1,19 @@
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { jwtConstants } from './common/constants';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthEntity } from './entities/auth.entities';
+import JwtAuthStrategy from './jwt-auth.strategy';
 
 @Module({
-  providers: [AuthService],
+  providers: [AuthService, JwtAuthStrategy],
   controllers: [AuthController],
   imports: [
     TypeOrmModule.forFeature([AuthEntity]),
     JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: jwtConstants.expiresIn },
+      secret: 'your-secret-key',
+      signOptions: { expiresIn: '1d' },
     }),
   ],
 })

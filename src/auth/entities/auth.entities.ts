@@ -11,13 +11,13 @@ export class AuthEntity {
   @Column({ length: 100, default: '' })
   email: string;
 
-  @Column()
+  @Column({ default: null })
   phone: number;
 
   @Column({ length: 1000, default: '' })
   avatar: string;
 
-  @Column({ length: 20, default: '' })
+  @Column({ length: 100, default: '' })
   password: string;
 
   @Column({ length: 100, default: '' })
