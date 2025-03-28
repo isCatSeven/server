@@ -53,6 +53,7 @@ export class CacheService {
    */
   async getEmailCode(email: string): Promise<string> {
     const key = `email_code:${email}`;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.get(key);
   }
 
@@ -68,6 +69,7 @@ export class CacheService {
     deleteAfterVerify: boolean = true,
   ): Promise<boolean> {
     const key = `email_code:${email}`;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const savedCode = await this.get(key);
 
     if (!savedCode) {

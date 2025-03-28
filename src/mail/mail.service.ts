@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as nodemailer from 'nodemailer';
+import { createTransport, Transporter } from 'nodemailer';
 
 @Injectable()
 export class MailService {
-  private transporter: nodemailer.Transporter;
+  private transporter: Transporter;
 
   constructor(private configService: ConfigService) {
     // 创建邮件传输器
-    this.transporter = nodemailer.createTransport({
+    this.transporter = createTransport({
       host: this.configService.get('MAIL_HOST'),
       port: this.configService.get('MAIL_PORT'),
       secure: this.configService.get('MAIL_SECURE') === 'true',
@@ -26,31 +26,26 @@ export class MailService {
    * @returns 发送结果
    */
   async sendVerificationCode(to: string, code: string): Promise<boolean> {
-    try {
-      const mailOptions = {
-        from: `"验证码服务" <${this.configService.get('MAIL_USER')}>`,
-        to,
-        subject: '登录验证码',
-        html: `
-          <div style="background-color: #f4f4f4; padding: 20px; font-family: Arial, sans-serif;">
-            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-              <h2 style="color: #333; text-align: center;">登录验证码</h2>
-              <p style="color: #666; font-size: 16px;">您好，您的登录验证码为：</p>
-              <div style="background-color: #f9f9f9; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; color: #333; margin: 20px 0; letter-spacing: 5px;">
-                ${code}
-              </div>
-              <p style="color: #666; font-size: 14px;">验证码有效期为5分钟，请勿将验证码泄露给他人。</p>
-              <p style="color: #999; font-size: 12px; text-align: center; margin-top: 30px;">此邮件由系统自动发送，请勿回复。</p>
+    const mailOptions = {
+      from: `"验证码服务" <${this.configService.get('MAIL_USER')}>`,
+      to,
+      subject: '登录验证码',
+      html: `
+        <div style="background-color: #f4f4f4; padding: 20px; font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <h2 style="color: #333; text-align: center;">登录验证码</h2>
+            <p style="color: #666; font-size: 16px;">您好，您的登录验证码为：</p>
+            <div style="background-color: #f9f9f9; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; color: #333; margin: 20px 0; letter-spacing: 5px;">
+              ${code}
             </div>
+            <p style="color: #666; font-size: 14px;">验证码有效期为5分钟，请勿将验证码泄露给他人。</p>
+            <p style="color: #999; font-size: 12px; text-align: center; margin-top: 30px;">此邮件由系统自动发送，请勿回复。</p>
           </div>
-        `,
-      };
+        </div>
+      `,
+    };
 
-      await this.transporter.sendMail(mailOptions);
-      return true;
-    } catch (error) {
-      console.error('发送邮件失败:', error);
-      return false;
-    }
+    await this.transporter.sendMail(mailOptions);
+    return true;
   }
 }
