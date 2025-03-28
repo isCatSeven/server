@@ -30,6 +30,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
+    "@types/cache-manager-ioredis": "^2.0.7",
     "@types/nodemailer": "^6.4.17",
     "bcryptjs": "^3.0.2",
     "cache-manager": "^6.4.1",

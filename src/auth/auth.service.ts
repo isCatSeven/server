@@ -21,20 +21,24 @@ export class AuthService {
     private cacheService: CacheService,
   ) {}
 
-  async register(data: ChangeAuthDto) {
-    if (!data.phone && !data.email) {
-      throw new BadRequestException('手机号和邮箱至少填写一个');
+  async register(data: ChangeAuthDto & { code: string }) {
+    // 验证邮箱验证码
+    const isValid = await this.cacheService.verifyEmailCode(
+      data.email,
+      data.code,
+    );
+    if (!isValid) {
+      throw new BadRequestException('验证码无效或已过期');
     }
 
     const findUser = await this.authRepository.findOne({
       where: {
-        phone: data.phone,
         email: data.email,
       },
     });
 
     if (findUser) {
-      throw new BadRequestException('用户已存在');
+      throw new BadRequestException('该邮箱已被注册');
     }
 
     // Create a new object instead of modifying the read-only DTO

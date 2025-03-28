@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
 
 export class ChangeAuthDto {
   @IsNotEmpty({ message: '姓名必填' })
@@ -7,6 +7,8 @@ export class ChangeAuthDto {
 
   readonly phone: number;
 
+  @IsNotEmpty({ message: '邮箱必填' })
+  @IsEmail({}, { message: '邮箱格式不正确' })
   readonly email: string;
 
   readonly avatar: string;

@@ -1325,6 +1325,19 @@
     "@types/connect" "*"
     "@types/node" "*"
 
+"@types/cache-manager-ioredis@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@types/cache-manager-ioredis/-/cache-manager-ioredis-2.0.7.tgz#e7cac8de0891169380fba1bbef3cff658aadbbc0"
+  integrity sha512-DPqce7/qEbKiK5s0A2aexlKwkThhbRzX+yFpSsM+RYnMS2+T1AjGjYg8fyT8xoAA4GKD+Z+ZnAiWuu1Z8aXaiw==
+  dependencies:
+    "@types/cache-manager" "<3"
+    "@types/ioredis" "^4.28.10"
+
+"@types/cache-manager@<3":
+  version "2.10.3"
+  resolved "https://registry.yarnpkg.com/@types/cache-manager/-/cache-manager-2.10.3.tgz#6c5ffb177b45c2e251f32432354ff83bddbd18ec"
+  integrity sha512-PbaxAeU8SZhbVd6+IuepvyWN7KAjEThsrkdvITDxKAlN6/abIr3NW3WPzNLjJekqbVijg4YUYsyrVc84xXUHQw==
+
 "@types/connect@*":
   version "3.4.38"
   resolved "https://registry.npmjs.org/@types/connect/-/connect-3.4.38.tgz"
@@ -1393,6 +1406,13 @@
   version "2.0.4"
   resolved "https://registry.npmjs.org/@types/http-errors/-/http-errors-2.0.4.tgz"
   integrity sha512-D0CFMMtydbJAegzOyHjtiKPLlvnm3iTZyZRSZoLq2mRhDdmLfIWOCYPfQJ4cu2erKghU++QvjcUjp/5h7hESpA==
+
+"@types/ioredis@^4.28.10":
+  version "4.28.10"
+  resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-4.28.10.tgz#40ceb157a4141088d1394bb87c98ed09a75a06ff"
+  integrity sha512-69LyhUgrXdgcNDv7ogs1qXZomnfOEnSmrmMFqKgt1XMJxmoOSG/u3wYy13yACIfKuMJ8IhKgHafDO3sx19zVQQ==
+  dependencies:
+    "@types/node" "*"
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.6"

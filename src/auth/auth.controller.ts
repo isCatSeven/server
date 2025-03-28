@@ -11,14 +11,11 @@ export class AuthController {
 
   /**
    * 注册
-   * @param phone 手机号
-   * @param email 邮箱
-   * @param username 用户名
-   * @param password 密码
+   * @param data 包含用户信息和邮箱验证码的DTO
    */
   @Public()
   @Post('/register')
-  register(@Body() data: ChangeAuthDto) {
+  register(@Body() data: ChangeAuthDto & { code: string }) {
     return this.authService.register(data);
   }
 
