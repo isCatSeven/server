@@ -51,10 +51,19 @@ export class PostsService {
 
   // 获取单个帖子详情
   async findOne(id: number) {
-    const post = await this.postsRepository.findOne({
-      where: { id },
-      relations: ['user'],
-    });
+    const post = await this.postsRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.user', 'user')
+      .select([
+        'post',
+        'user.id',
+        'user.username',
+        'user.avatar',
+        'user.desc',
+        'user.email',
+      ])
+      .where('post.id = :id', { id })
+      .getOne();
 
     if (!post) {
       throw new NotFoundException(`帖子ID ${id} 不存在`);
@@ -74,28 +83,36 @@ export class PostsService {
     }
 
     // 查找用户
-    const user = await this.authRepository.findOne({ where: { id: userId } });
+    const user = await this.authRepository.findOne({
+      where: { id: userId },
+      select: ['id', 'username', 'avatar', 'email', 'desc'],
+    });
     if (!user) {
       throw new HttpException('用户不存在', 400);
     }
 
     // 创建文章并关联用户
     const newPost = this.postsRepository.create({
-      user,
       ...data,
       user_id: userId,
       author: user.username, // 使用用户名作为作者
     });
 
-    return this.postsRepository.save(newPost);
+    // 保存文章并自动关联用户（通过user_id和@JoinColumn配置）
+    const savedPost = await this.postsRepository.save(newPost);
+
+    // 查询完整的文章信息（包含用户信息但排除敏感字段）
+    return this.findOne(savedPost.id);
   }
 
   // 更新帖子
   async update(id: number, updatePostDto: UpdatePostDto, userId: number) {
-    const post = await this.postsRepository.findOne({
-      where: { id },
-      relations: ['user'],
-    });
+    // 使用QueryBuilder查询文章及其关联的用户
+    const post = await this.postsRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.user', 'user')
+      .where('post.id = :id', { id })
+      .getOne();
 
     if (!post) {
       throw new NotFoundException(`帖子ID ${id} 不存在`);
@@ -106,21 +123,25 @@ export class PostsService {
       throw new HttpException('没有权限修改此帖子', 403);
     }
 
-    // 更新帖子
+    // 更新帖子（保持用户关联不变）
     const updatedPost = this.postsRepository.merge(post, {
       ...updatePostDto,
       update_time: new Date(),
     });
 
-    return this.postsRepository.save(updatedPost);
+    await this.postsRepository.save(updatedPost);
+
+    // 返回更新后的完整文章信息
+    return this.findOne(id);
   }
 
   // 删除帖子
   async remove(id: number, userId: number) {
-    const post = await this.postsRepository.findOne({
-      where: { id },
-      relations: ['user'],
-    });
+    // 使用QueryBuilder查询文章
+    const post = await this.postsRepository
+      .createQueryBuilder('post')
+      .where('post.id = :id', { id })
+      .getOne();
 
     if (!post) {
       throw new NotFoundException(`帖子ID ${id} 不存在`);

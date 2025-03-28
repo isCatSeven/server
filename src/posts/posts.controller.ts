@@ -19,14 +19,14 @@ import { verify } from 'jsonwebtoken';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Get()
+  @Get('/list')
   findAll(@Query() paginationDto: PaginationDto) {
     return this.postsService.findAll(paginationDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.postsService.findOne(id);
   }
 
   @Post('/add')

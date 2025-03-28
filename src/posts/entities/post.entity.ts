@@ -1,9 +1,9 @@
 import {
   Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
   PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { AuthEntity } from '../../auth/entities/auth.entities';
 
@@ -30,10 +30,10 @@ export class PostEntity {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   update_time: Date;
 
-  @ManyToOne(() => AuthEntity, (user) => user.posts)
-  @JoinColumn({ name: 'user_id' })
-  user: AuthEntity;
-
   @Column()
   user_id: number;
+
+  @ManyToOne(() => AuthEntity)
+  @JoinColumn({ name: 'user_id' })
+  user: AuthEntity;
 }

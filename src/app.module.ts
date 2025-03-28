@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { AuthEntity } from './auth/entities/auth.entities';
 import { jwtAuthGuard } from './auth/jwt-auth.grard';
 import { APP_GUARD } from '@nestjs/core';
+import { MailModule } from './mail/mail.module';
+import { CacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { APP_GUARD } from '@nestjs/core';
     }),
     PostsModule,
     AuthModule,
+    MailModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [
