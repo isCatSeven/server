@@ -5,5 +5,9 @@ export class AddPostDto {
 
   readonly content: string;
 
+  readonly richText: string;
+
+  readonly category: string[];
+
   readonly cover_url: string;
 }
