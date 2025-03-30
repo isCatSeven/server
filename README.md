@@ -1,14 +1,40 @@
 # NestJS API 服务器
 
+## 项目概述
+
+这是一个基于NestJS构建的RESTful API服务，提供用户认证和帖子管理功能。
+
+## 技术栈
+
+- 框架: NestJS
+- 数据库: TypeORM + MySQL/PostgreSQL
+- 认证: JWT
+- 缓存: Redis
+- 邮件服务: Nodemailer
+
 ## 生命周期钩子
 
-模块初始化：OnModuleInit
-应用启动：OnApplicationBootstrap
-模块销毁：OnModuleDestroy
-应用关闭前：BeforeApplicationShutdown
-应用正式关闭：OnApplicationShutdown
+| 钩子名称                 | 描述                          |
+|--------------------------|-------------------------------|
+| OnModuleInit             | 模块初始化时调用              |
+| OnApplicationBootstrap   | 应用启动时调用                |
+| OnModuleDestroy          | 模块销毁时调用                |
+| BeforeApplicationShutdown | 应用关闭前调用                |
+| OnApplicationShutdown    | 应用正式关闭时调用            |
 
 ## API 接口文档
+
+### 通用说明
+
+- 所有API请求都需要在Header中添加`Content-Type: application/json`
+- 认证接口返回的token需要在后续请求的Header中添加`Authorization: Bearer <token>`
+- 错误码说明:
+  - 200: 请求成功
+  - 400: 请求参数错误
+  - 401: 未授权
+  - 403: 禁止访问
+  - 404: 资源不存在
+  - 500: 服务器内部错误
 
 ### 认证模块 (auth)
 

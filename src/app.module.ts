@@ -34,6 +34,15 @@ import { CacheModule } from './cache/cache.module';
           database: configService.get('DB_DATABASE'), //数据库名
           timezone: '+08:00', //服务器上配置的时区
           synchronize: true, //根据实体自动创建数据库表， 生产环境建议关闭
+          poolSize: 10, // 连接池大小
+          extra: {
+            connectionLimit: 20, // 最大连接数
+            connectTimeout: 10000, // 连接超时时间(毫秒)
+            acquireTimeout: 10000, // 获取连接超时时间(毫秒)
+            waitForConnections: true, // 无可用连接时等待
+          },
+          retryAttempts: 5, // 重试次数
+          retryDelay: 3000, // 重试间隔(毫秒)
         };
       },
     }),
