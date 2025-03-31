@@ -11,8 +11,8 @@ export class AuthEntity {
   @Column({ length: 100, default: '' })
   email: string;
 
-  @Column({ default: null })
-  phone: number;
+  @Column({ length: 20, default: '' })
+  phone: string;
 
   @Column({ length: 1000, default: '' })
   avatar: string;

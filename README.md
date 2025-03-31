@@ -16,16 +16,18 @@
 
 - **URL**: `/auth/register`
 - **方法**: POST
-- **描述**: 用户注册
+- **描述**: 用户注册（邮箱验证码）
 - **请求参数**:
 
-| 参数名   | 类型   | 必填 | 描述    |
-| -------- | ------ | ---- | ------- |
-| username | string | 是   | 用户名  |
-| password | string | 是   | 密码    |
-| phone    | number | 否   | 手机号  |
-| email    | string | 否   | 邮箱    |
-| avatar   | string | 否   | 头像URL |
+| 参数名   | 类型   | 必填 | 描述                      |
+| -------- | ------ | ---- | ------------------------- |
+| username | string | 是   | 用户名                    |
+| password | string | 是   | 密码                      |
+| phone    | string | 否   | 手机号                    |
+| email    | string | 是   | 邮箱                      |
+| avatar   | string | 否   | 头像URL                   |
+| code     | string | 是   | 验证码                    |
+| codeType | string | 否   | 验证码类型，默认为"email" |
 
 - **返回示例**:
 
@@ -46,11 +48,35 @@
 }
 ```
 
+#### 手机号注册接口
+
+- **URL**: `/auth/register-by-phone`
+- **方法**: POST
+- **描述**: 用户通过手机号验证码注册
+- **请求参数**:
+
+| 参数名   | 类型   | 必填 | 描述    |
+| -------- | ------ | ---- | ------- |
+| username | string | 是   | 用户名  |
+| password | string | 是   | 密码    |
+| phone    | string | 是   | 手机号  |
+| code     | string | 是   | 验证码  |
+| email    | string | 否   | 邮箱    |
+| avatar   | string | 否   | 头像URL |
+
+- **返回示例**:
+
+```json
+{
+  "message": "注册成功"
+}
+```
+
 #### 登录接口
 
 - **URL**: `/auth/login`
 - **方法**: POST
-- **描述**: 用户登录
+- **描述**: 用户名密码登录
 - **请求参数**:
 
 | 参数名   | 类型   | 必填 | 描述   |
@@ -74,6 +100,86 @@
     }
   },
   "message": "登录成功"
+}
+```
+
+#### 邮箱验证码登录接口
+
+- **URL**: `/auth/email-login`
+- **方法**: POST
+- **描述**: 邮箱验证码登录
+- **请求参数**:
+
+| 参数名 | 类型   | 必填 | 描述   |
+| ------ | ------ | ---- | ------ |
+| email  | string | 是   | 邮箱   |
+| code   | string | 是   | 验证码 |
+
+- **返回示例**:
+
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "message": "登录成功"
+}
+```
+
+#### 手机验证码登录接口
+
+- **URL**: `/auth/phone-login`
+- **方法**: POST
+- **描述**: 手机验证码登录
+- **请求参数**:
+
+| 参数名 | 类型   | 必填 | 描述   |
+| ------ | ------ | ---- | ------ |
+| phone  | string | 是   | 手机号 |
+| code   | string | 是   | 验证码 |
+
+- **返回示例**:
+
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "message": "登录成功"
+}
+```
+
+#### 发送邮箱验证码
+
+- **URL**: `/auth/send-email-code`
+- **方法**: POST
+- **描述**: 发送邮箱验证码
+- **请求参数**:
+
+| 参数名 | 类型   | 必填 | 描述 |
+| ------ | ------ | ---- | ---- |
+| email  | string | 是   | 邮箱 |
+
+- **返回示例**:
+
+```json
+{
+  "message": "验证码已发送，请查收邮件"
+}
+```
+
+#### 发送短信验证码
+
+- **URL**: `/auth/send-sms-code`
+- **方法**: POST
+- **描述**: 发送短信验证码
+- **请求参数**:
+
+| 参数名 | 类型   | 必填 | 描述   |
+| ------ | ------ | ---- | ------ |
+| phone  | string | 是   | 手机号 |
+
+- **返回示例**:
+
+```json
+{
+  "message": "验证码已发送，请注意查收短信"
 }
 ```
 

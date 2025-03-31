@@ -12,6 +12,7 @@ import { jwtAuthGuard } from './auth/jwt-auth.grard';
 import { APP_GUARD } from '@nestjs/core';
 import { MailModule } from './mail/mail.module';
 import { CacheModule } from './cache/cache.module';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { CacheModule } from './cache/cache.module';
     AuthModule,
     MailModule,
     CacheModule,
+    SmsModule,
   ],
   controllers: [AppController],
   providers: [

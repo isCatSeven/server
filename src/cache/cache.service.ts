@@ -84,4 +84,57 @@ export class CacheService {
 
     return isValid;
   }
+
+  /**
+   * 设置短信验证码
+   * @param phone 手机号
+   * @param code 验证码
+   * @param ttl 过期时间（秒），默认300秒
+   */
+  async setSmsCode(
+    phone: string,
+    code: string,
+    ttl: number = 300,
+  ): Promise<void> {
+    const key = `sms_code:${phone}`;
+    await this.set(key, code, ttl);
+  }
+
+  /**
+   * 获取短信验证码
+   * @param phone 手机号
+   */
+  async getSmsCode(phone: string): Promise<string> {
+    const key = `sms_code:${phone}`;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return await this.get(key);
+  }
+
+  /**
+   * 验证短信验证码
+   * @param phone 手机号
+   * @param code 验证码
+   * @param deleteAfterVerify 验证后是否删除，默认true
+   */
+  async verifySmsCode(
+    phone: string,
+    code: string,
+    deleteAfterVerify: boolean = true,
+  ): Promise<boolean> {
+    const key = `sms_code:${phone}`;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const savedCode = await this.get(key);
+
+    if (!savedCode) {
+      return false; // 验证码不存在或已过期
+    }
+
+    const isValid = savedCode === code;
+
+    if (isValid && deleteAfterVerify) {
+      await this.del(key); // 验证成功后删除验证码
+    }
+
+    return isValid;
+  }
 }

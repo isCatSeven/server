@@ -9,6 +9,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { MailModule } from '../mail/mail.module';
 import { CacheModule } from '../cache/cache.module';
+import { SmsModule } from '../sms/sms.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CacheModule } from '../cache/cache.module';
     }),
     MailModule,
     CacheModule,
+    SmsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
