@@ -13,6 +13,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { MailModule } from './mail/mail.module';
 import { CacheModule } from './cache/cache.module';
 import { SmsModule } from './sms/sms.module';
+import { PaymentModule } from './payment/payment.module';
+import { PaymentOrderEntity } from './payment/entities/payment-order.entity';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { SmsModule } from './sms/sms.module';
       useFactory: (configService: ConfigService) => {
         return {
           type: 'mysql', // 数据库类型
-          entities: [PostEntity, AuthEntity], // 数据表实体
+          entities: [PostEntity, AuthEntity, PaymentOrderEntity], // 数据表实体
           autoLoadEntities: true, // 自动加载实体
           host: configService.get('DB_HOST'), // 主机，默认为localhost
           port: configService.get<number>('DB_PORT'), // 端口号
@@ -43,6 +45,7 @@ import { SmsModule } from './sms/sms.module';
     MailModule,
     CacheModule,
     SmsModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [

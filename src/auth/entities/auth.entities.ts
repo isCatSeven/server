@@ -22,4 +22,7 @@ export class AuthEntity {
 
   @Column({ length: 100, default: '' })
   username: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  balance: number; // 用户余额
 }

@@ -1,11 +1,12 @@
 import { Public } from 'src/common/public.decorator';
 import { AuthService } from './auth.service';
 import { ChangeAuthDto } from './dto/change-auth.dto';
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Get, Headers } from '@nestjs/common';
 import { EmailLoginDto } from './dto/email-login.dto';
 import { SendCodeDto } from './dto/send-code.dto';
 import { PhoneLoginDto } from './dto/phone-login.dto';
 import { SendSmsCodeDto } from './dto/send-sms-code.dto';
+import { verify } from 'jsonwebtoken';
 
 @Controller('auth')
 export class AuthController {
@@ -75,5 +76,18 @@ export class AuthController {
   @Post('/register-by-phone')
   registerByPhone(@Body() data: PhoneLoginDto & ChangeAuthDto) {
     return this.authService.registerByPhone(data);
+  }
+
+  /**
+   * 获取用户余额
+   */
+  @Get('/balance')
+  getUserBalance(@Headers('authorization') token: string) {
+    const tokenValue = token.split(' ')[1];
+    const decoded = verify(tokenValue, process.env.JWT_SECRET!) as {
+      id: number;
+    };
+
+    return this.authService.getUserBalance(decoded.id);
   }
 }

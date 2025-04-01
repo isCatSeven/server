@@ -249,4 +249,26 @@ export class AuthService {
 
     return '注册成功';
   }
+
+  /**
+   * 获取用户余额
+   * @param userId 用户ID
+   * @returns 用户余额信息
+   */
+  async getUserBalance(userId: number) {
+    const user = await this.authRepository.findOne({
+      where: { id: userId },
+      select: ['id', 'username', 'balance'],
+    });
+
+    if (!user) {
+      throw new BadRequestException('用户不存在');
+    }
+
+    return {
+      balance: user.balance,
+      userId: user.id,
+      username: user.username,
+    };
+  }
 }
