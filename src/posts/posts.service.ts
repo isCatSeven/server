@@ -4,7 +4,12 @@ import { AddPostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { PostEntity } from './entities/post.entity';
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  HttpException,
+  BadRequestException,
+} from '@nestjs/common';
 import { AuthEntity } from '../auth/entities/auth.entities';
 
 @Injectable()
@@ -108,9 +113,22 @@ export class PostsService {
   }
 
   // 添加帖子
-  async add(data: AddPostDto, userId: number) {
-    if (!data.title || !data.content) {
-      throw new HttpException('缺少参数', 400);
+  async add(post: AddPostDto, cover: string, userId: number) {
+    // 过滤富文本HTML标签
+    const cleanRichText = this.sanitizeHtml(post.richText);
+
+    // 验证分类标签
+    if (!post.category.every((tag) => this.isValidTag(tag))) {
+      throw new BadRequestException('包含无效的分类标签');
+    }
+
+    // 验证封面URL格式
+    if (post.cover_url && !this.isValidUrl(post.cover_url)) {
+      throw new BadRequestException('封面图片URL格式无效');
+    }
+
+    if (!post.title || !post.content) {
+      throw new BadRequestException('缺少参数');
     }
 
     if (!userId) {
@@ -225,5 +243,22 @@ export class PostsService {
       }
       throw new HttpException(`删除帖子失败: ${error.message}`, 500);
     }
+  }
+
+  private sanitizeHtml(html: string): string {
+    return html.replace(
+      /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+      '',
+    );
+  }
+
+  private isValidTag(tag: string): boolean {
+    return /^[\w\u4e00-\u9fa5]{1,10}$/.test(tag);
+  }
+
+  private isValidUrl(url: string): boolean {
+    return /^(https?:\/\/)[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/.test(
+      url,
+    );
   }
 }
